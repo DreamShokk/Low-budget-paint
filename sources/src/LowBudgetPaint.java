@@ -4,32 +4,35 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import javax.imageio.ImageIO;
 
 public class LowBudgetPaint extends JFrame{
-
+    //Global settings
     static final int width=800;
     static final int height=800;
     static final int menuheight=50;
     static Color currentColor=Color.black; 
     static int currentLineSize=10;
+    static final private ColorPicker colorPickerWindow=new ColorPicker();
 
+
+    //global images
     static final ImageIcon saved=new ImageIcon(LowBudgetPaint.class.getResource("images/save.png"));
     static final ImageIcon done=new ImageIcon(LowBudgetPaint.class.getResource("images/done.png"));
     static final ImageIcon size=new ImageIcon(LowBudgetPaint.class.getResource("images/size.png"));
 
-
-    private JPanel sizeSettings=new JPanel();
+//This instance
     static private LowBudgetPaint instance;
+    private JPanel brushSettings =new JPanel();
     public static void setSizeSettingsVisibility(boolean setTo){
-        instance.sizeSettings.setVisible(setTo);
+        instance.brushSettings.setVisible(setTo);
     }
 
-    public LowBudgetPaint(String title){
+    private LowBudgetPaint(String title){
+        //The window itself
         super(title);
         setLayout(null);
         setBounds( 0,0,width, height);
@@ -37,61 +40,96 @@ public class LowBudgetPaint extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-
+        //The menu itself
         JPanel menu=new JPanel();
         menu.setLayout(null);
         menu.setBounds(0, 0, width, menuheight);
         menu.setBackground(Color.GRAY);
 
-
-        Painel body=new Painel();
-        body.setBounds(0, menuheight, width, height-menuheight);
-        body.setBackground(Color.WHITE);
-
+        //Save button on the menu
         JButton save=new JButton(saved);
         save.setBorder(null);
         save.setFocusable(false);
         save.setBackground(Color.white);
         save.setBounds(5,5,40,40);
+        save.addMouseListener(new MouseInputListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try{
+                    ImageIO.write(Painel.currentImage, "png", new File("image.png"));
+                    repaint();
+                    save.setIcon(done);
+
+                    Timer timer = new Timer(2000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent arg0) {
+                            save.setIcon(saved);
+                        }
+                    });
+                    timer.setRepeats(false);
+                    timer.start();
 
 
+                }catch(IOException ex){System.err.println("Error while omitting file: "+ex.getMessage());};}
 
-        sizeSettings.setBounds(0,50,150,50);
-        sizeSettings.setBackground(Color.cyan);
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+
+            @Override
+            public void mouseDragged(MouseEvent e) {}
+
+            @Override
+            public void mouseMoved(MouseEvent e) {}
+
+        });
+
+
+        //UI for setting brush details
+        brushSettings.setBounds(0,50,150,75);
+        brushSettings.setBackground(Color.cyan);
 
         JSlider setSizeSlider=new JSlider(5,25);
-        setSizeSlider.setValue(10);
         JLabel sizeToText=new JLabel(setSizeSlider.getValue()+" px");
 
+        //Labeling for the stroke size
         sizeToText.setBounds(0,0,150,25);
         sizeToText.setHorizontalAlignment(JLabel.CENTER);
-        sizeSettings.add(sizeToText);
+        brushSettings.add(sizeToText);
 
-
+        //Slider for the stroke size
+        setSizeSlider.setValue(10);
         setSizeSlider.setBounds(0,25,150,25);
         setSizeSlider.setLayout(null);
         setSizeSlider.addChangeListener(x->{
             currentLineSize=setSizeSlider.getValue();
             sizeToText.setText(setSizeSlider.getValue()+" px");
         });
-        sizeSettings.add(setSizeSlider);
+        brushSettings.add(setSizeSlider);
 
+        //Color picker
+        JButton colorPicker=new JButton();
 
-
-        JButton setSize=new JButton(size);
-        setSize.setBorder(null);
-        setSize.setFocusable(false);
-        setSize.setBackground(Color.white);
-        setSize.setBounds(55,5,40,40);
-        MouseInputListener sizeClicked=new MouseInputListener() {
+        MouseInputListener colorPickClicked=new MouseInputListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
+                colorPickerWindow.setVisible(true);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                sizeSettings.setVisible(!sizeSettings.isVisible());
+
             }
 
             @Override
@@ -119,63 +157,115 @@ public class LowBudgetPaint extends JFrame{
 
             }
         };
-        setSize.addMouseListener(sizeClicked);
-        save.addMouseListener(new MouseInputListener() {
-            
+        colorPicker.addMouseListener(colorPickClicked);
+
+        colorPicker.setBounds(0,50,150,25);
+        brushSettings.add(colorPicker);
+
+        //Button for brush settings
+        JButton setBrush=new JButton(size);
+        setBrush.setBorder(null);
+        setBrush.setFocusable(false);
+        setBrush.setBackground(Color.white);
+        setBrush.setBounds(55,5,40,40);
+        MouseInputListener sizeClicked=new MouseInputListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-            try{
-                ImageIO.write(Painel.currentImage, "png", new File("image.png"));
-                repaint();
-                save.setIcon(done);
 
-                Timer timer = new Timer(2000, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent arg0) {
-                        save.setIcon(saved);
-                    }
-                });
-                timer.setRepeats(false);
-                timer.start();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                brushSettings.setVisible(!brushSettings.isVisible());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+            }
+        };
+        setBrush.addMouseListener(sizeClicked);
 
 
-            }catch(IOException ex){System.err.println("Error while omitting file: "+ex.getMessage());};}
+        //The body (canvas) itself
+        Painel body=new Painel();
+        body.setBounds(0, menuheight, width, height-menuheight);
+        body.setBackground(Color.WHITE);
+
+        //Construction of the menu bar
+        menu.add(save);
+        menu.add(setBrush);
+
+
+        //construction of the window itself
+        add(menu);
+        brushSettings.setVisible(false);
+        add(brushSettings);
+        add(body);
+        setResizable(false);
+        brushSettings.setLayout(null);
+        setVisible(true);
+        MouseInputListener MouseEntered=new MouseInputListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
 
             @Override
             public void mousePressed(MouseEvent e) {
 
             }
-            @Override
-            public void mouseReleased(MouseEvent e) {}
 
             @Override
-            public void mouseEntered(MouseEvent e) {}
+            public void mouseReleased(MouseEvent e) {
+
+            }
 
             @Override
-            public void mouseExited(MouseEvent e) {}
+            public void mouseEntered(MouseEvent e) {
+
+            }
 
             @Override
-            public void mouseDragged(MouseEvent e) {}
+            public void mouseExited(MouseEvent e) {
+
+            }
 
             @Override
-            public void mouseMoved(MouseEvent e) {}
-            
-        });
+            public void mouseDragged(MouseEvent e) {
 
-        menu.add(save);
-        menu.add(setSize);
+            }
 
-        add(menu);
-        sizeSettings.setVisible(false);
-        add(sizeSettings);
-        add(body);
-        setResizable(false);
-        sizeSettings.setLayout(null);
-        setVisible(true);
-
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                repaint();
+            }
+        };
+        addMouseMotionListener(MouseEntered);
     }
 
     public static void main(String[] args) {
         instance=new LowBudgetPaint("Low Budget Paint");
+
     }
 }
