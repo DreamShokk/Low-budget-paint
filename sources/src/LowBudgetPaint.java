@@ -16,7 +16,7 @@ public class LowBudgetPaint extends JFrame{
     static final int menuheight=50;
     static Color currentColor=Color.black; 
     static int currentLineSize=10;
-    static final private ColorPicker colorPickerWindow=new ColorPicker();
+    final private ColorPicker colorPickerWindow=new ColorPicker();
 
 
     //global images
@@ -265,7 +265,11 @@ public class LowBudgetPaint extends JFrame{
     }
 
     public static void main(String[] args) {
-        instance=new LowBudgetPaint("Low Budget Paint");
-
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                instance=new LowBudgetPaint("Low Budget Paint");
+            }
+        });
     }
 }
