@@ -35,6 +35,7 @@ public class Painel extends JPanel{
             @Override
             public void mousePressed(MouseEvent e) {
                 PP=e.getPoint();
+                LowBudgetPaint.setSizeSettingsVisibility(false);
                 toDraw(e);
             }
 

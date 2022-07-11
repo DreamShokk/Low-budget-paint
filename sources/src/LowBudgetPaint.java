@@ -20,7 +20,14 @@ public class LowBudgetPaint extends JFrame{
 
     static final ImageIcon saved=new ImageIcon(LowBudgetPaint.class.getResource("images/save.png"));
     static final ImageIcon done=new ImageIcon(LowBudgetPaint.class.getResource("images/done.png"));
+    static final ImageIcon size=new ImageIcon(LowBudgetPaint.class.getResource("images/size.png"));
 
+
+    private JPanel sizeSettings=new JPanel();
+    static private LowBudgetPaint instance;
+    public static void setSizeSettingsVisibility(boolean setTo){
+        instance.sizeSettings.setVisible(setTo);
+    }
 
     public LowBudgetPaint(String title){
         super(title);
@@ -30,22 +37,89 @@ public class LowBudgetPaint extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-        JPanel menu=new JPanel();
-        Painel body=new Painel();
-        menu.setLayout(null);
 
+        JPanel menu=new JPanel();
+        menu.setLayout(null);
         menu.setBounds(0, 0, width, menuheight);
-        body.setBounds(0, menuheight, width, height-menuheight);
         menu.setBackground(Color.GRAY);
+
+
+        Painel body=new Painel();
+        body.setBounds(0, menuheight, width, height-menuheight);
         body.setBackground(Color.WHITE);
 
-        JButton save=new JButton();
-        save.setIcon(saved);
+        JButton save=new JButton(saved);
         save.setBorder(null);
-        save.setMargin(new Insets(0, 0, 0, 0));;
-
+        save.setFocusable(false);
         save.setBackground(Color.white);
-        save.setBounds(0,0,50,50);
+        save.setBounds(5,5,40,40);
+
+
+
+        sizeSettings.setBounds(0,50,150,50);
+        sizeSettings.setBackground(Color.cyan);
+
+        JSlider setSizeSlider=new JSlider(5,25);
+        setSizeSlider.setValue(10);
+        JLabel sizeToText=new JLabel(setSizeSlider.getValue()+" px");
+
+        sizeToText.setBounds(0,0,150,25);
+        sizeToText.setHorizontalAlignment(JLabel.CENTER);
+        sizeSettings.add(sizeToText);
+
+
+        setSizeSlider.setBounds(0,25,150,25);
+        setSizeSlider.setLayout(null);
+        setSizeSlider.addChangeListener(x->{
+            currentLineSize=setSizeSlider.getValue();
+            sizeToText.setText(setSizeSlider.getValue()+" px");
+        });
+        sizeSettings.add(setSizeSlider);
+
+
+
+        JButton setSize=new JButton(size);
+        setSize.setBorder(null);
+        setSize.setFocusable(false);
+        setSize.setBackground(Color.white);
+        setSize.setBounds(55,5,40,40);
+        MouseInputListener sizeClicked=new MouseInputListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                sizeSettings.setVisible(!sizeSettings.isVisible());
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+
+            }
+        };
+        setSize.addMouseListener(sizeClicked);
         save.addMouseListener(new MouseInputListener() {
             
             @Override
@@ -89,15 +163,19 @@ public class LowBudgetPaint extends JFrame{
         });
 
         menu.add(save);
-
+        menu.add(setSize);
 
         add(menu);
+        sizeSettings.setVisible(false);
+        add(sizeSettings);
         add(body);
         setResizable(false);
+        sizeSettings.setLayout(null);
         setVisible(true);
+
     }
 
     public static void main(String[] args) {
-        new LowBudgetPaint("LBP");
+        instance=new LowBudgetPaint("Low Budget Paint");
     }
 }
