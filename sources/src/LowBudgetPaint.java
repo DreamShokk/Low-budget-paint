@@ -1,13 +1,14 @@
-import java.awt.Color;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
+import javax.swing.*;
 import javax.swing.event.MouseInputListener;
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class LowBudgetPaint extends JFrame{
 
@@ -16,7 +17,9 @@ public class LowBudgetPaint extends JFrame{
     static final int menuheight=50;
     static Color currentColor=Color.black; 
     static int currentLineSize=10;
-    
+
+    static final ImageIcon saved=new ImageIcon(LowBudgetPaint.class.getResource("images/save.png"));
+    static final ImageIcon done=new ImageIcon(LowBudgetPaint.class.getResource("images/done.png"));
 
 
     public LowBudgetPaint(String title){
@@ -36,9 +39,12 @@ public class LowBudgetPaint extends JFrame{
         menu.setBackground(Color.GRAY);
         body.setBackground(Color.WHITE);
 
-        JButton save=new JButton("Save image");
+        JButton save=new JButton();
+        save.setIcon(saved);
+        save.setBorder(null);
+        save.setMargin(new Insets(0, 0, 0, 0));;
+
         save.setBackground(Color.white);
-        save.setForeground(Color.black);
         save.setBounds(0,0,50,50);
         save.addMouseListener(new MouseInputListener() {
             
@@ -47,7 +53,19 @@ public class LowBudgetPaint extends JFrame{
             try{
                 ImageIO.write(Painel.currentImage, "png", new File("image.png"));
                 repaint();
-            }catch(IOException ex){System.err.println("Error while ommiting file: "+ex.getMessage());};}
+                save.setIcon(done);
+
+                Timer timer = new Timer(2000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent arg0) {
+                        save.setIcon(saved);
+                    }
+                });
+                timer.setRepeats(false);
+                timer.start();
+
+
+            }catch(IOException ex){System.err.println("Error while omitting file: "+ex.getMessage());};}
 
             @Override
             public void mousePressed(MouseEvent e) {

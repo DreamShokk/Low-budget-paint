@@ -14,6 +14,7 @@ public class Painel extends JPanel{
 
     @Override
     public void paintComponent(Graphics g){
+        super.paintComponent(g);
         g.drawImage(currentImage, 0, 0, null);
     }
     private void toDraw(MouseEvent e){
@@ -21,6 +22,7 @@ public class Painel extends JPanel{
         a.setColor(LowBudgetPaint.currentColor);
         a.setStroke(new BasicStroke(LowBudgetPaint.currentLineSize,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
         a.drawLine(PP.x, PP.y, e.getX(), e.getY());
+        a.dispose();
         repaint();
     }
     Painel(){
