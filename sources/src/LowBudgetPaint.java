@@ -127,7 +127,7 @@ public class LowBudgetPaint extends JFrame{
         menu.add(setBrush);
 
 
-        //construction of the window itself
+        //Construction of the window itself
         add(menu);
         brushSettings.setVisible(false);
         add(brushSettings);
