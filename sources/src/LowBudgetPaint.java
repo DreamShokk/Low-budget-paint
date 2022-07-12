@@ -1,12 +1,10 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputListener;
 import javax.imageio.ImageIO;
 
 public class LowBudgetPaint extends JFrame{
@@ -26,7 +24,7 @@ public class LowBudgetPaint extends JFrame{
 
 //This instance
     static private LowBudgetPaint instance;
-    private JPanel brushSettings =new JPanel();
+    private final JPanel brushSettings =new JPanel();
     public static void setSizeSettingsVisibility(boolean setTo){
         instance.brushSettings.setVisible(setTo);
     }
@@ -52,8 +50,7 @@ public class LowBudgetPaint extends JFrame{
         save.setFocusable(false);
         save.setBackground(Color.white);
         save.setBounds(5,5,40,40);
-        save.addMouseListener(new MouseInputListener() {
-
+        save.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try{
@@ -61,37 +58,12 @@ public class LowBudgetPaint extends JFrame{
                     repaint();
                     save.setIcon(done);
 
-                    Timer timer = new Timer(2000, new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent arg0) {
-                            save.setIcon(saved);
-                        }
-                    });
+                    Timer timer = new Timer(2000, arg0 -> save.setIcon(saved));
                     timer.setRepeats(false);
                     timer.start();
 
 
-                }catch(IOException ex){System.err.println("Error while omitting file: "+ex.getMessage());};}
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-
-            @Override
-            public void mouseDragged(MouseEvent e) {}
-
-            @Override
-            public void mouseMoved(MouseEvent e) {}
-
+                }catch(IOException ex){System.err.println("Error while omitting file: "+ex.getMessage());}}
         });
 
 
@@ -120,44 +92,13 @@ public class LowBudgetPaint extends JFrame{
         //Color picker
         JButton colorPicker=new JButton();
 
-        MouseInputListener colorPickClicked=new MouseInputListener() {
+        colorPicker.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
                 colorPickerWindow.setVisible(true);
             }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
-        };
-        colorPicker.addMouseListener(colorPickClicked);
+        });
 
         colorPicker.setBounds(0,50,150,25);
         brushSettings.add(colorPicker);
@@ -168,43 +109,12 @@ public class LowBudgetPaint extends JFrame{
         setBrush.setFocusable(false);
         setBrush.setBackground(Color.white);
         setBrush.setBounds(55,5,40,40);
-        MouseInputListener sizeClicked=new MouseInputListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
+        setBrush.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 brushSettings.setVisible(!brushSettings.isVisible());
             }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
-        };
-        setBrush.addMouseListener(sizeClicked);
+        });
 
 
         //The body (canvas) itself
@@ -225,51 +135,15 @@ public class LowBudgetPaint extends JFrame{
         setResizable(false);
         brushSettings.setLayout(null);
         setVisible(true);
-        MouseInputListener MouseEntered=new MouseInputListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-
-            }
-
+        addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 repaint();
             }
-        };
-        addMouseMotionListener(MouseEntered);
+        });
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                instance=new LowBudgetPaint("Low Budget Paint");
-            }
-        });
+        SwingUtilities.invokeLater(() -> instance=new LowBudgetPaint("Low Budget Paint"));
     }
 }

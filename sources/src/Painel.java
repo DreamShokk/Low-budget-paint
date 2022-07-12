@@ -1,6 +1,6 @@
 import javax.swing.JPanel;
-import javax.swing.event.MouseInputListener;
 
+import java.awt.event.MouseAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -27,38 +27,20 @@ public class Painel extends JPanel{
     }
     Painel(){
         super();
-        MouseInputListener motion=new MouseInputListener() {
-            
-            @Override
-            public void mouseClicked(MouseEvent e) {}
-
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 PP=e.getPoint();
                 LowBudgetPaint.setSizeSettingsVisibility(false);
                 toDraw(e);
             }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-
-            @Override
-            public void mouseExited(MouseEvent e) {}
-
+        });
+        addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 toDraw(e);
                 PP=e.getPoint();
             }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {}
-            
-        };
-        addMouseListener(motion);
-        addMouseMotionListener(motion);
+        });
     }
 } 
