@@ -1,40 +1,24 @@
-
-import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.colorchooser.AbstractColorChooserPanel;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
+import java.awt.*;
 
 public class ColorPicker  extends JFrame {
-    private JColorChooser colorpick;
+
+    Color Invert(Color color) {
+        double y = (299 * color.getRed() + 587 * color.getGreen() + 114 * color.getBlue()) / 1000;
+        return y >= 128 ? Color.black : Color.white;
+    }
 
     ColorPicker(){
         super("Color Picker");
             setDefaultCloseOperation(HIDE_ON_CLOSE);
             setSize(600,400);
             setLocationRelativeTo(null);
-        SwingUtilities.invokeLater(() -> {
-            colorpick = new JColorChooser();
-            colorpick.getSelectionModel().addChangeListener(l-> LowBudgetPaint.currentColor=colorpick.getColor());
+            JColorChooser colorpick = new JColorChooser();
+            colorpick.getSelectionModel().addChangeListener(l->{
+                LowBudgetPaint.currentColor=colorpick.getColor();
+                LowBudgetPaint.panels.get(Tool.Brush.code).setBackground(colorpick.getColor());
+                LowBudgetPaint.sizeToText.setForeground(Invert(colorpick.getColor()));
+            });
             add(colorpick);
-        });
-
-
-        addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                repaint();
-            }
-        });
-
-
-    }
-    @Override
-    public void paintComponents(Graphics g){
-        super.paintComponents(g);
-        colorpick.repaint();
     }
 }
