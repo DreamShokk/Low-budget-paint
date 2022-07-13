@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,9 +13,9 @@ public class LowBudgetPaint extends JFrame{
     static final int width=800;
     static final int height=800;
     static final int menuheight=50;
-    static Color currentColor=Color.black; 
+    static Color currentColor=Color.black;
     static int currentLineSize=10;
-    final private ColorPicker colorPickerWindow=new ColorPicker();
+    private ColorPicker colorPickerWindow;
 
 
     //global images
@@ -90,6 +91,8 @@ public class LowBudgetPaint extends JFrame{
         brushSettings.add(setSizeSlider);
 
         //Color picker
+        SwingUtilities.invokeLater(() -> colorPickerWindow=new ColorPicker());
+
         JButton colorPicker=new JButton();
 
         colorPicker.addMouseListener(new MouseAdapter() {
