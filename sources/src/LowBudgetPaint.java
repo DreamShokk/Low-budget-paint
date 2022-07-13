@@ -18,7 +18,7 @@ public class LowBudgetPaint extends JFrame{
     private ColorPicker colorPickerWindow;
 
 
-    //global images
+    //Global images
     static final ImageIcon saved=new ImageIcon(LowBudgetPaint.class.getResource("images/save.png"));
     static final ImageIcon done=new ImageIcon(LowBudgetPaint.class.getResource("images/done.png"));
     static final ImageIcon size=new ImageIcon(LowBudgetPaint.class.getResource("images/size.png"));
@@ -130,7 +130,7 @@ public class LowBudgetPaint extends JFrame{
         menu.add(setBrush);
 
 
-        //construction of the window itself
+        //Construction of the window itself
         add(menu);
         brushSettings.setVisible(false);
         add(brushSettings);
