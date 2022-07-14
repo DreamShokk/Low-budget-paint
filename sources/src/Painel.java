@@ -28,7 +28,13 @@ public class Painel extends JPanel{
             a.drawLine(PP.x, PP.y, e.getX(), e.getY());
         } else
         if(LowBudgetPaint.currentTool==Tool.ColorPicker) {
-
+            int clr = currentImage.getRGB(e.getX(), e.getY());
+            int red =   (clr & 0x00ff0000) >> 16;
+            int green = (clr & 0x0000ff00) >> 8;
+            int blue =   clr & 0x000000ff;
+            LowBudgetPaint.currentColor=new Color(red,green,blue,255);
+            LowBudgetPaint.panels.get(Tool.Brush.code).setBackground(LowBudgetPaint.currentColor);
+            LowBudgetPaint.sizeToText.setForeground(ColorPicker.Invert(LowBudgetPaint.currentColor));
         }
         a.dispose();
         repaint();
